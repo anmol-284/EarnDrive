@@ -4,14 +4,18 @@ const { authenticateUser } = require('../Auth/Auth'); // Middleware for authenti
 
 // Import controllers
 const { register, login, logout } = require('../controllers/user');
-const { postbike } = require('../controllers/bike');
-const { payment } = require('../controllers/payment');
+const { postbike, getBikes } = require('../controllers/bike');
+const { createOrder, verifyPayment, getKey } = require('../controllers/payment');
+
 
 // Define routes
 router.post("/login", login);
 router.post("/signup", register);
 router.post("/logout", logout);
 router.post('/bike', authenticateUser, postbike);
-router.get('/get_payment', payment);
+router.post('/create-order', createOrder);
+router.post('/paymentverification', verifyPayment);
+router.get('/bikes' ,getBikes);
+router.get('/getkey' ,getKey);
 
 module.exports = router;

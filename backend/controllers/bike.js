@@ -28,9 +28,9 @@ exports.postbike = async (req, res) => {
       bikeName,
       bikeModel,
       bikeNumber,
-      State,
-      City,
-      Area,
+      State: State.toLowerCase(),
+      City: City.toLowerCase(), 
+      Area: Area.toLowerCase(),
       pricePerHour,
       pinCode,
       listingTime,
@@ -58,4 +58,31 @@ exports.postbike = async (req, res) => {
       error: error.message
     });
   }
+};
+
+exports.getBikes = async (req, res) => {
+    try {
+        const { City, State, Area, pinCode } = req.query;
+        const filter = { expirationTime: { $gt: new Date() } };
+
+        if (City) {
+            filter.City = City;
+        }
+        if (State) {
+            filter.State = State;
+        }
+        if (Area) {
+            filter.Area = Area;
+        }
+        if (pinCode) {
+            filter.pinCode = pinCode;
+        }
+
+        const bikes = await Bike.find(filter).populate('owner');
+        res.status(200).json(bikes);
+    } 
+    catch (error) {
+        console.error('Error fetching bikes:', error);
+        res.status(500).json({ message: 'Failed to fetch bikes' });
+    }
 };
